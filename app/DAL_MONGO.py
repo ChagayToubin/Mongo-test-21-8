@@ -34,7 +34,7 @@ class DAL_mongo:
         self.open_connection()
         db = self.client[self.database]
         collection = db[self.collection]
-        data = collection.find({}, {"_id": 0})
+        data = collection.find({}, {"_id": 0}).limit(-10)
         self.data= data
         return pd.DataFrame((self.data))
 
