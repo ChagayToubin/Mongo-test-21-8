@@ -1,14 +1,17 @@
 from fastapi import FastAPI
 from app.manager import Manager
+import json
 
 app = FastAPI()
 
-m=Manager()
-m.MFinding_the_rarest_word()
-m.Mweapon_find()
+m = Manager()
 
 @app.get("/")
 def start():
-    return m.df.to_json('temp.json.gz', orient='records', lines=True, compression='gzip')
+    m.clean_and_order()
 
+    data = m.df.head(100).to_json(orient="records")
+    parsed = json.loads(data)
+
+    return parsed
 

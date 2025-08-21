@@ -38,8 +38,6 @@ class DAL_mongo:
         self.data= data
         return pd.DataFrame((self.data))
 
-
-
     def close_connection(self):
         if self.client:
             self.client.close()

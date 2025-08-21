@@ -1,13 +1,29 @@
-# import nltk
-# from nltk.sentiment.vader import SentimentIntensityAnalyzer
-# nltk.download('vader_lexicon')# Compute sentiment labels
-# tweet = 'Skillcate is a great Youtube Channel to learn DataScience'
-# score=SentimentIntensityAnalyzer().polarity_scores(tweet)
-# from app.DAL_MONGO import DAL_mongo
 
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from collections import Counter
+nltk.download('vader_lexicon')
 
 class Processor:
+    @staticmethod
+    def PEmotions_of_text(df):
+        df["sentiment"]=df["Text"].apply(Processor.Emotions_of_text)
+        return df
+
+    @staticmethod
+    def Emotions_of_text(tweet):
+        score = SentimentIntensityAnalyzer().polarity_scores(tweet)
+        answer=""
+        if score["compound"] >= 0.5:
+            answer= "Positive"
+        elif score["compound"] <= -0.5:
+            answer= "Negative"
+        else:
+            answer= "Neutral"
+        return answer
+
+    # =================================
+
     @staticmethod
     def PFinding_the_rarest_word(df):
         df["rarest_word"] = df["Text"].apply(Processor.find_rasrest_word)
@@ -23,13 +39,15 @@ class Processor:
         return rarest[0]
 
     # =================================
+
     @staticmethod
     def Pweapon_find(df):
         df["weapons_detected"]=df["Text"].apply(Processor.weapon_find)
         return df
     @staticmethod
     def weapon_find(text):
-        weapons = [
+        # weapons =Processor.load_txt()
+        weapons=[
             "A-bomb",
             "ammo",
             "ammunition",
@@ -171,10 +189,18 @@ class Processor:
             "whip"
         ]
         words = text.split()
-        print(words)
+
         for word in words:
             if word in weapons:
+                print("3333")
                 return word
-        return "!@#@2 "
+        return "---"
+    # =================================
 
+    # @staticmethod
+    # def load_txt():
+    #     with open("../data/weapon_list.txt", "r") as text_file:
+    #         lines = [line.strip() for line in text_file.readlines()]
+    #     return lines
 
+# print(Processor.load_txt())
